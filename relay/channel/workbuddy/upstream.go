@@ -128,14 +128,20 @@ func ensureFreshCredential(c *gin.Context, info *relaycommon.RelayInfo) {
 	if err != nil {
 		return
 	}
+	// The channel key may hold a whole account pool, one JSON per line, while
+	// the relay only ever holds the single line it picked. Swap that line, not
+	// the column, or one refresh would drop every other account.
+	originalKey := info.ApiKey
 	info.ApiKey = encoded
 	if info.ChannelMeta != nil {
 		info.ChannelMeta.ApiKey = encoded
 	}
 	if id := info.GetChannelID(); id > 0 {
-		if err := model.DB.Model(&model.Channel{}).Where("id = ?", id).
-			Update("key", encoded).Error; err == nil {
-			model.BumpSyncTopic(model.SyncTopicChannels)
+		if _, err := model.UpdateChannelLocked(id, func(stored *model.Channel) error {
+			stored.Key = ReplaceCredentialLine(stored.Key, originalKey, encoded)
+			return nil
+		}); err != nil {
+			common.SysError("workbuddy persist rotated credential failed: " + err.Error())
 		}
 	}
 }

@@ -119,3 +119,51 @@ func TestDefaultModelsNonEmpty(t *testing.T) {
 		}
 	}
 }
+
+// A channel key can hold a whole account pool. A token refresh covers one
+// account only, so it must swap that line and leave the rest untouched.
+func TestReplaceCredentialLineKeepsPool(t *testing.T) {
+	line1 := `{"uid":"u1","access_token":"at-1","refresh_token":"rt-1","realm":"cn"}`
+	line2 := `{"uid":"u2","access_token":"at-2","refresh_token":"rt-2","realm":"cn"}`
+	line3 := `{"uid":"u3","access_token":"at-3","refresh_token":"rt-3","realm":"cn"}`
+	pool := strings.Join([]string{line1, line2, line3}, "\n")
+
+	rotated := `{"uid":"u2","access_token":"at-2-new","refresh_token":"rt-2-new","realm":"cn"}`
+	got := ReplaceCredentialLine(pool, line2, rotated)
+	lines := strings.Split(got, "\n")
+	if len(lines) != 3 {
+		t.Fatalf("pool size = %d, want 3: %q", len(lines), got)
+	}
+	if lines[0] != line1 || lines[2] != line3 {
+		t.Fatalf("other accounts were modified: %q", got)
+	}
+	if cred, err := ParseCredential(lines[1]); err != nil || cred.AccessToken != "at-2-new" {
+		t.Fatalf("rotated line = %q (%v)", lines[1], err)
+	}
+}
+
+func TestReplaceCredentialLineFallsBackToUID(t *testing.T) {
+	pool := `{"uid":"u1","access_token":"at-1","refresh_token":"rt-1"}` + "\n" +
+		`{"uid":"u2", "access_token": "at-2", "refresh_token": "rt-2"}`
+	original := `{"uid":"u2","access_token":"at-2","refresh_token":"rt-2"}`
+	rotated := `{"uid":"u2","access_token":"at-2-new","refresh_token":"rt-2-new"}`
+
+	got := ReplaceCredentialLine(pool, original, rotated)
+	if n := len(strings.Split(got, "\n")); n != 2 {
+		t.Fatalf("pool size = %d, want 2: %q", n, got)
+	}
+	if !strings.Contains(got, "at-2-new") || !strings.Contains(got, "at-1") {
+		t.Fatalf("unexpected key: %q", got)
+	}
+}
+
+func TestReplaceCredentialLineAppendsUnknownAccount(t *testing.T) {
+	pool := `{"uid":"u1","access_token":"at-1","refresh_token":"rt-1"}`
+	original := `{"uid":"zz","access_token":"at-z","refresh_token":"rt-z"}`
+	rotated := `{"uid":"zz","access_token":"at-z-new","refresh_token":"rt-z-new"}`
+
+	got := ReplaceCredentialLine(pool, original, rotated)
+	if n := len(strings.Split(got, "\n")); n != 2 {
+		t.Fatalf("pool size = %d, want 2: %q", n, got)
+	}
+}

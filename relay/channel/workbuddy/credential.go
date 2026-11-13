@@ -214,3 +214,47 @@ var DefaultModels = []string{
 	"gpt-6-astra", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
 	"gpt-5.5", "gpt-5.4", "gpt-5.3-codex", "gemini-3.5-flash", "auto",
 }
+
+// ReplaceCredentialLine swaps the account line a relay used (original) for the
+// rotated credential, keeping every other account in the pool. A channel key
+// can hold many accounts, one JSON per line, and a refresh only covers one.
+func ReplaceCredentialLine(key, original, encoded string) string {
+	original = strings.TrimSpace(original)
+	uid := ""
+	if cred, err := ParseCredential(original); err == nil {
+		uid = cred.UID
+	}
+	lines := make([]string, 0)
+	replaced := false
+	for _, line := range strings.Split(strings.TrimSpace(key), "\n") {
+		if line = strings.TrimSpace(line); line == "" {
+			continue
+		}
+		if !replaced && line == original {
+			lines = append(lines, encoded)
+			replaced = true
+			continue
+		}
+		lines = append(lines, line)
+	}
+	if !replaced && uid != "" {
+		// Whitespace or a re-encoded line broke the exact match; identify the
+		// account by UID instead so the pool keeps its order.
+		lines = lines[:0]
+		for _, line := range strings.Split(strings.TrimSpace(key), "\n") {
+			if line = strings.TrimSpace(line); line == "" {
+				continue
+			}
+			if cred, err := ParseCredential(line); err == nil && cred.UID == uid {
+				lines = append(lines, encoded)
+				replaced = true
+				continue
+			}
+			lines = append(lines, line)
+		}
+	}
+	if !replaced {
+		lines = append(lines, encoded)
+	}
+	return strings.Join(lines, "\n")
+}
