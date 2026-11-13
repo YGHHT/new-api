@@ -81,6 +81,12 @@ func ChannelType2APIType(channelType int) (int, bool) {
 		apiType = constant.APITypeSub2API
 	case constant.ChannelTypeNewAPI:
 		apiType = constant.APITypeNewAPI
+	case constant.ChannelTypeWorkBuddy:
+		// WorkBuddy talks to the official upstream with its own header family.
+		// Trae (65) and Qoder (66) are OpenAI-compatible engine channels: they
+		// keep the OpenAI API type and take their models from the engine's
+		// /v1/models, so success stays false and no default list is invented.
+		apiType = constant.APITypeWorkBuddy
 	}
 	if apiType == -1 {
 		// Task plugin channels are served by the task relay and must never

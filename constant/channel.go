@@ -61,6 +61,9 @@ const (
 	ChannelTypeTaskPlugin     = 61
 	ChannelTypeVLLM           = 62
 	ChannelTypeSGLang         = 63
+	ChannelTypeWorkBuddy      = 64
+	ChannelTypeTrae           = 65
+	ChannelTypeQoder          = 66
 	ChannelTypeDummy          // this one is only for count, do not add any channel after this
 
 )
@@ -132,6 +135,9 @@ var ChannelBaseURLs = []string{
 	"",                                          //61
 	"",                                          //62
 	"",                                          //63
+	"",                                          //64 WorkBuddy: realm resolved from credential
+	"",                                          //65 Trae
+	"",                                          //66 Qoder
 }
 
 func GetChannelBaseURL(channelType int) string {
@@ -202,6 +208,9 @@ var ChannelTypeNames = map[int]string{
 	ChannelTypeTaskPlugin:     "Task Plugin",
 	ChannelTypeVLLM:           "vLLM",
 	ChannelTypeSGLang:         "SGLang",
+	ChannelTypeWorkBuddy:      "WorkBuddy",
+	ChannelTypeTrae:           "Trae",
+	ChannelTypeQoder:          "Qoder",
 }
 
 func GetChannelTypeName(channelType int) string {

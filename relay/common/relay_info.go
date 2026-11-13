@@ -479,6 +479,12 @@ var streamSupportedChannels = map[int]bool{
 	constant.ChannelTypeVLLM:           true,
 	constant.ChannelTypeSGLang:         true,
 	constant.ChannelTypeTencent:        true,
+	// Account-pool channels. WorkBuddy's adaptor forces stream=true on the
+	// official upstream; Trae and Qoder are served by their OpenAI-compatible
+	// engines, which stream natively.
+	constant.ChannelTypeWorkBuddy: true,
+	constant.ChannelTypeTrae:      true,
+	constant.ChannelTypeQoder:     true,
 }
 
 func GenRelayInfoWs(c *gin.Context, ws *websocket.Conn) *RelayInfo {

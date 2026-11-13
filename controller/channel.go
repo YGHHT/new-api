@@ -677,6 +677,23 @@ func validateChannel(channel *model.Channel, isAdd bool) error {
 	if channel.Type == constant.ChannelTypeSGLang && strings.TrimSpace(channel.GetBaseURL()) == "" {
 		return fmt.Errorf("SGLang channel base URL cannot be empty")
 	}
+	if channel.Type == constant.ChannelTypeTrae && strings.TrimSpace(channel.GetBaseURL()) == "" {
+		return fmt.Errorf("TraeWorkAssistant engine base URL cannot be empty")
+	}
+	if channel.Type == constant.ChannelTypeQoder && strings.TrimSpace(channel.GetBaseURL()) == "" {
+		return fmt.Errorf("Qoder engine base URL cannot be empty")
+	}
+	if channel.Type == constant.ChannelTypeWorkBuddy && strings.TrimSpace(channel.Key) != "" {
+		for _, line := range strings.Split(strings.TrimSpace(channel.Key), "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" {
+				continue
+			}
+			if !strings.HasPrefix(line, "{") {
+				return fmt.Errorf("WorkBuddy key must be one account JSON object per line")
+			}
+		}
+	}
 
 	// 如果是添加操作，检查 channel 和 key 是否为空
 	if isAdd {

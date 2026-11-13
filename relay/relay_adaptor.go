@@ -41,6 +41,7 @@ import (
 	"github.com/QuantumNous/new-api/relay/channel/tencent"
 	"github.com/QuantumNous/new-api/relay/channel/vertex"
 	"github.com/QuantumNous/new-api/relay/channel/volcengine"
+	"github.com/QuantumNous/new-api/relay/channel/workbuddy"
 	"github.com/QuantumNous/new-api/relay/channel/xai"
 	"github.com/QuantumNous/new-api/relay/channel/xunfei"
 	"github.com/QuantumNous/new-api/relay/channel/zhipu"
@@ -124,6 +125,13 @@ func GetAdaptor(apiType int) channel.Adaptor {
 		return &sub2api.Adaptor{}
 	case constant.APITypeNewAPI:
 		return &newapi.Adaptor{}
+	case constant.APITypeWorkBuddy:
+		return &workbuddy.Adaptor{}
+	case constant.APITypeTrae, constant.APITypeQoder:
+		// Both engines expose an OpenAI-compatible /v1 surface. The type
+		// constants stay registered so the model-list bootstrap can resolve
+		// every APIType below APITypeDummy.
+		return &openai.Adaptor{}
 	case constant.APITypeProviderPlugin:
 		return &providerplugin.Adaptor{}
 	}

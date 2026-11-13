@@ -20,6 +20,9 @@ import {
   CHANNEL_TYPES,
   CHANNEL_TYPE_VLLM,
   CHANNEL_TYPE_SGLANG,
+  CHANNEL_TYPE_WORKBUDDY,
+  CHANNEL_TYPE_TRAE,
+  CHANNEL_TYPE_QODER,
 } from '../constants'
 
 // ============================================================================
@@ -49,6 +52,36 @@ export interface ChannelTypeConfig {
  * Configuration for each channel type
  */
 export const CHANNEL_TYPE_CONFIGS: Record<number, ChannelTypeConfig> = {
+  [CHANNEL_TYPE_WORKBUDDY]: {
+    id: CHANNEL_TYPE_WORKBUDDY,
+    name: CHANNEL_TYPES[CHANNEL_TYPE_WORKBUDDY],
+    icon: 'openai',
+    hints: {
+      baseUrl: 'Leave empty unless routing through a reverse proxy',
+      key: 'One WorkBuddy account JSON per line: {"access_token":"...","refresh_token":"...","uid":"..."}',
+      models: 'WorkBuddy upstream model IDs, optionally prefixed cn: or global:',
+    },
+  },
+  [CHANNEL_TYPE_TRAE]: {
+    id: CHANNEL_TYPE_TRAE,
+    name: CHANNEL_TYPES[CHANNEL_TYPE_TRAE],
+    icon: 'openai',
+    hints: {
+      baseUrl: 'TraeWorkAssistant engine address, without /v1',
+      key: 'API key configured on the TraeWorkAssistant engine',
+      models: 'Models fetched from upstream /v1/models',
+    },
+  },
+  [CHANNEL_TYPE_QODER]: {
+    id: CHANNEL_TYPE_QODER,
+    name: CHANNEL_TYPES[CHANNEL_TYPE_QODER],
+    icon: 'openai',
+    hints: {
+      baseUrl: 'Qoder engine address, without /v1',
+      key: 'API key configured on the Qoder engine',
+      models: 'Models fetched from upstream /v1/models',
+    },
+  },
   [CHANNEL_TYPE_SGLANG]: {
     id: CHANNEL_TYPE_SGLANG,
     name: CHANNEL_TYPES[CHANNEL_TYPE_SGLANG],

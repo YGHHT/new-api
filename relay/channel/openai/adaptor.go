@@ -254,7 +254,13 @@ func (a *Adaptor) ConvertOpenAIRequest(c *gin.Context, info *relaycommon.RelayIn
 	if request == nil {
 		return nil, errors.New("request is nil")
 	}
-	if info.ChannelType != constant.ChannelTypeOpenAI && info.ChannelType != constant.ChannelTypeAzure {
+	// Trae (65) and Qoder (66) are OpenAI-compatible engine channels: they
+	// stream usage just like a standard OpenAI upstream, so keep stream_options
+	// for them instead of stripping it as other non-OpenAI adaptors do.
+	switch info.ChannelType {
+	case constant.ChannelTypeOpenAI, constant.ChannelTypeAzure,
+		constant.ChannelTypeTrae, constant.ChannelTypeQoder:
+	default:
 		request.StreamOptions = nil
 	}
 	// Nested reasoning is an OpenRouter-compatible input dialect and needs
