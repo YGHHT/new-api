@@ -195,10 +195,20 @@ export const CHANNEL_PROVIDER_PRESENTATION: Partial<
     descriptionKey:
       'Use WorkBuddy account credentials directly; paste one account JSON per line as the channel key',
     detailKey:
-      'The channel refreshes expiring tokens before each request. Trae and Qoder accounts are served through their OpenAI-compatible engines instead.',
+      'The channel refreshes expiring tokens before each request. Trae and Qoder accounts use their own native channels.',
   },
-  65: { descriptionKey: 'Connect to a TraeWorkAssistant engine as an OpenAI-compatible upstream' },
-  66: { descriptionKey: 'Connect to a Qoder engine as an OpenAI-compatible upstream' },
+  65: {
+    descriptionKey:
+      'Use Trae account credentials directly; paste one account JSON per line as the channel key',
+    detailKey:
+      'Optional Base URL overrides the Trae gateway host. The channel refreshes the JWT before each request.',
+  },
+  66: {
+    descriptionKey:
+      'Use Qoder account credentials directly; paste one account JSON per line as the channel key',
+    detailKey:
+      'Optional Base URL overrides the Qoder gateway host. The channel refreshes the token before each request.',
+  },
 } satisfies Record<
   Exclude<keyof typeof CHANNEL_TYPES, 0 | typeof CHANNEL_TYPE_TASK_PLUGIN>,
   ChannelProviderPresentation
@@ -545,8 +555,6 @@ export const MODEL_FETCHABLE_TYPES = new Set([
   60,
   CHANNEL_TYPE_VLLM,
   CHANNEL_TYPE_SGLANG,
-  CHANNEL_TYPE_TRAE,
-  CHANNEL_TYPE_QODER,
 ])
 
 // A plugin channel relays the formats its plugin's routes serve, so it takes
@@ -598,8 +606,8 @@ export const TYPE_TO_KEY_PROMPT: Record<number, string> = {
   62: 'vLLM API key, or EMPTY if authentication is disabled',
   63: 'SGLang API key, or EMPTY if authentication is disabled',
   64: 'Paste one WorkBuddy account JSON per line (access_token / refresh_token / uid)',
-  65: 'Enter the API key configured on the TraeWorkAssistant engine',
-  66: 'Enter the API key configured on the Qoder engine',
+  65: 'Paste one Trae account JSON per line (uid / jwt / refresh_token)',
+  66: 'Paste one Qoder account JSON per line (uid / access_token / refresh_token / realm)',
 }
 
 export const CHANNEL_TYPE_WARNINGS: Record<number, string> = {

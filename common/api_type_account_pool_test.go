@@ -13,11 +13,11 @@ func TestAccountPoolChannelAPIType(t *testing.T) {
 		wantOK      bool
 	}{
 		{constant.ChannelTypeWorkBuddy, constant.APITypeWorkBuddy, true},
-		// Trae and Qoder are OpenAI-compatible engine channels: the adaptor
-		// resolves to OpenAI while success stays false so no default model
-		// catalog is invented for them.
-		{constant.ChannelTypeTrae, constant.APITypeOpenAI, false},
-		{constant.ChannelTypeQoder, constant.APITypeOpenAI, false},
+		// Trae and Qoder now have native adaptors with their own API types, so
+		// the relay resolves to the native adaptor and the default model list
+		// comes from DefaultModels.
+		{constant.ChannelTypeTrae, constant.APITypeTrae, true},
+		{constant.ChannelTypeQoder, constant.APITypeQoder, true},
 	}
 
 	for _, tc := range cases {

@@ -67,9 +67,9 @@ export const CHANNEL_TYPE_CONFIGS: Record<number, ChannelTypeConfig> = {
     name: CHANNEL_TYPES[CHANNEL_TYPE_TRAE],
     icon: 'openai',
     hints: {
-      baseUrl: 'TraeWorkAssistant engine address, without /v1',
-      key: 'API key configured on the TraeWorkAssistant engine',
-      models: 'Models fetched from upstream /v1/models',
+      baseUrl: 'Leave empty unless routing the Trae gateway through a proxy',
+      key: 'One Trae account JSON per line: {"uid":"...","jwt":"...","refresh_token":"..."}',
+      models: 'Trae upstream model IDs (e.g. deepseek-v4-flash, kimi-k3)',
     },
   },
   [CHANNEL_TYPE_QODER]: {
@@ -77,9 +77,9 @@ export const CHANNEL_TYPE_CONFIGS: Record<number, ChannelTypeConfig> = {
     name: CHANNEL_TYPES[CHANNEL_TYPE_QODER],
     icon: 'openai',
     hints: {
-      baseUrl: 'Qoder engine address, without /v1',
-      key: 'API key configured on the Qoder engine',
-      models: 'Models fetched from upstream /v1/models',
+      baseUrl: 'Leave empty unless routing the Qoder gateway through a proxy',
+      key: 'One Qoder account JSON per line: {"uid":"...","access_token":"...","refresh_token":"...","realm":"cn"}',
+      models: 'Qoder upstream model keys (e.g. auto, kmodel_latest)',
     },
   },
   [CHANNEL_TYPE_SGLANG]: {

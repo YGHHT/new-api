@@ -33,12 +33,14 @@ import (
 	"github.com/QuantumNous/new-api/relay/channel/palm"
 	"github.com/QuantumNous/new-api/relay/channel/perplexity"
 	"github.com/QuantumNous/new-api/relay/channel/providerplugin"
+	"github.com/QuantumNous/new-api/relay/channel/qoder"
 	"github.com/QuantumNous/new-api/relay/channel/replicate"
 	"github.com/QuantumNous/new-api/relay/channel/siliconflow"
 	"github.com/QuantumNous/new-api/relay/channel/sub2api"
 	"github.com/QuantumNous/new-api/relay/channel/submodel"
 	jspluginadaptor "github.com/QuantumNous/new-api/relay/channel/task/jsplugin"
 	"github.com/QuantumNous/new-api/relay/channel/tencent"
+	"github.com/QuantumNous/new-api/relay/channel/trae"
 	"github.com/QuantumNous/new-api/relay/channel/vertex"
 	"github.com/QuantumNous/new-api/relay/channel/volcengine"
 	"github.com/QuantumNous/new-api/relay/channel/workbuddy"
@@ -127,11 +129,10 @@ func GetAdaptor(apiType int) channel.Adaptor {
 		return &newapi.Adaptor{}
 	case constant.APITypeWorkBuddy:
 		return &workbuddy.Adaptor{}
-	case constant.APITypeTrae, constant.APITypeQoder:
-		// Both engines expose an OpenAI-compatible /v1 surface. The type
-		// constants stay registered so the model-list bootstrap can resolve
-		// every APIType below APITypeDummy.
-		return &openai.Adaptor{}
+	case constant.APITypeQoder:
+		return &qoder.Adaptor{}
+	case constant.APITypeTrae:
+		return &trae.Adaptor{}
 	case constant.APITypeProviderPlugin:
 		return &providerplugin.Adaptor{}
 	}
